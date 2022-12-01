@@ -27,5 +27,6 @@ def count_calories(calorie_counts):
 #in_lines = read_file('data/day1_sample')
 in_lines = read_file('data/day1_input')
 calories = count_calories(in_lines)
-print(calories)
-print(max(calories))
+calories.sort(reverse=True)
+print(calories[0:3])
+print(sum(calories[0:3]))
