@@ -24,9 +24,26 @@ def count_calories(calorie_counts):
 
     return total_calories_by_elf
 
+def part_one(sample_file = False):
+    if not sample_file:
+        in_lines = read_file('data/day1_input')
+    else:
+        in_lines = read_file('data/day1_sample')
+
+    calories = count_calories(in_lines)
+    return max(calories)
+
+def part_two(sample_file = False):
+    if not sample_file:
+        in_lines = read_file('data/day1_input')
+    else:
+        in_lines = read_file('data/day1_sample')
+
+    calories = count_calories(in_lines)
+    calories.sort(reverse=True)
+    print(calories[0:3])
+    return sum(calories[0:3])
+
 #in_lines = read_file('data/day1_sample')
-in_lines = read_file('data/day1_input')
-calories = count_calories(in_lines)
-calories.sort(reverse=True)
-print(calories[0:3])
-print(sum(calories[0:3]))
+print(part_one())
+print(part_two())
