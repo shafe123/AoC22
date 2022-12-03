@@ -1,3 +1,7 @@
 def read_file(input_file):
+    result = []
     with open(input_file) as in_file:
-        return in_file.readlines()
+        for line in in_file:
+            result.append(line.strip())
+
+    return result
