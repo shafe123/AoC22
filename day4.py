@@ -1,5 +1,5 @@
 from utilities import read_file
-from typing import List
+from typing import List, Generator
 
 def split_numbers(input_lines):
     for index in range(len(input_lines)):
@@ -12,7 +12,7 @@ def unwind_numbers(splits):
     for index in range(len(splits)):
         splits[index] = set(range(splits[index][0], splits[index][1]+1)), set(range(splits[index][2], splits[index][3]+1))
 
-def ranges_subset(ranges: List[List[set]]):
+def ranges_subset(ranges: List[List[set]]) -> Generator[bool]:
     for range in ranges:
         yield range[0].issubset(range[1]) or range[1].issubset(range[0])
 
@@ -29,7 +29,7 @@ def part_one(sample_file = True):
 
 print(part_one(False))
 
-def ranges_intersect(ranges: List[List[set]]):
+def ranges_intersect(ranges: List[List[set]]) -> Generator[bool]:
     for range in ranges:
         yield range[0].intersection(range[1])
 
