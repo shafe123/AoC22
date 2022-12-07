@@ -118,12 +118,28 @@ def part_one(sample_file = True):
 
 print(part_one(False))
 
+
 def part_two(sample_file = True):
     if not sample_file:
         in_lines = read_file('data/day7_input')
     else:
         in_lines = read_file('data/day7_sample')
 
+    file_system = process_lines(in_lines)
+
+    space_remaining = 70000000 - file_system.directory_size()
+    space_needed = 30000000 - space_remaining
+
+    directory_sizes = file_system.get_sizes()
+
+    smallest_name = ""
+    smallest_necessary = 30000000
+    for name, size in directory_sizes:
+        if space_needed < size < smallest_necessary:
+            smallest_necessary = size
+            smallest_name = name
+
+    return smallest_necessary
 
 
-part_two()
+print(part_two(False))
