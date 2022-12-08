@@ -80,11 +80,59 @@ def part_one(sample_file = True):
 print(part_one(False))
 
 
+def viewing_score(tree_heights):
+    max_score = 0
+    for row in range(len(tree_heights)):
+        for col in range(len(tree_heights[0])):
+            score = calculate_score(tree_heights, row, col)
+            if score > max_score:
+                max_score = score
+
+    return max_score
+
+
+def calculate_score(tree_heights, start_row, start_col):
+    counts = [0, 0, 0, 0]
+
+    # check left
+    for col in range(start_col - 1, -1, -1):
+        counts[0] += 1
+        if tree_heights[start_row][col] >= tree_heights[start_row][start_col]:            
+            break
+
+    # check right
+    for col in range(start_col + 1, len(tree_heights[0])):
+        counts[1] += 1
+        if tree_heights[start_row][col] >= tree_heights[start_row][start_col]:
+            break
+
+    # check up
+    for row in range(start_row - 1, -1, -1):
+        counts[2] += 1
+        if tree_heights[row][start_col] >= tree_heights[start_row][start_col]:
+            break
+
+    # check down
+    for row in range(start_row + 1, len(tree_heights)):
+        counts[3] += 1
+        if tree_heights[row][start_col] >= tree_heights[start_row][start_col]:
+            break
+
+    score = 1
+    for count in counts:
+        score *= count
+
+    return score
+
+
 def part_two(sample_file = True):
     if not sample_file:
         in_lines = read_file('data/day8_input')
     else:
         in_lines = read_file('data/day8_sample')
 
+    tree_grid = process_input(in_lines)
+    return viewing_score(tree_grid)
 
-print(part_two())
+
+print(part_two(False))
