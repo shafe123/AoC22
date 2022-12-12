@@ -126,6 +126,25 @@ def part_one(sample_file = True):
     print(path)
     return len(path)
 
-
-
 print(part_one(False))
+
+def part_two(sample_file = True):
+    if not sample_file:
+        in_lines = read_file('data/day12_input')
+    else:
+        in_lines = read_file('data/day12_sample')
+
+    map, start, end = process_lines(in_lines)
+
+    min_path = math.inf
+    for row in range(len(map)):
+        for col in range(len(map)):
+            if map[row][col] == 0:
+                path = path_find(map, (row, col), end)
+                if path is not None and len(path) < min_path:
+                    min_path = len(path)
+
+    print(path)
+    return min_path
+
+print(part_two(False))
