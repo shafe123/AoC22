@@ -1,6 +1,18 @@
 from utilities import read_file
 from collections import namedtuple
 
+
+class fricken_thing(object):
+    def __init__(self, vals):
+        self.vals = vals
+
+    def __lt__(self, other):
+        return check_pair(self.vals, other.vals)
+
+    def __eq__(self, other):
+        return self.vals == other.vals
+
+
 Pair = namedtuple('Pair', ['left', 'right'])
 
 def process_lines(input_lines):
@@ -8,7 +20,8 @@ def process_lines(input_lines):
     for count in range(0, len(input_lines) + 1, 3):
         left = eval(input_lines[count])
         right = eval(input_lines[count + 1])
-        result.append(Pair(left, right))
+        result.append(fricken_thing(left))
+        result.append(fricken_thing(right))
     return result
 
 
@@ -62,5 +75,21 @@ def part_one(sample_file = True):
 
     
 
-print(part_one(False))
+# print(part_one(False))
 
+
+def part_two(sample_file = True):
+    if not sample_file:
+        in_lines = read_file('data/day13_input')
+    else:
+        in_lines = read_file('data/day13_sample')
+
+    pairs = process_lines(in_lines)
+    val1 = fricken_thing([[2]])
+    val2 = fricken_thing([[6]])
+    pairs.append(val1)
+    pairs.append(val2)
+    pairs.sort()
+    return (pairs.index(val1) + 1) * (pairs.index(val2) + 1)
+
+print(part_two(False))
