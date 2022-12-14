@@ -2,7 +2,7 @@ from utilities import read_file
 import math
 
 def process_lines(input_lines):
-    min_x = math.inf
+    min_x = 0
     min_y = 0
     max_x = -math.inf
     max_y = -math.inf
@@ -28,9 +28,9 @@ def process_lines(input_lines):
 
     # build empty map
     map = []
-    for row in range(min_y, max_y + 1):
+    for row in range(min_y, max_y + 3):
         new_row = []
-        for col in range(min_x, max_x + 1):
+        for col in range(min_x, max_x + 500):
             new_row.append('None')
         map.append(new_row)
 
@@ -40,6 +40,10 @@ def process_lines(input_lines):
         for end_point in path[1:]:
             draw(map, start, end_point, min_x)
             start = end_point
+
+    # bottom row part 2
+    for col in range(min_x, max_x + 500):
+        map[row][col - min_x] = 'rock'
 
     return map, min_x
     
@@ -80,6 +84,9 @@ def drop_sand(map, start_point):
         # check right
         elif map[row + 1][col + 1] == 'None':
             return drop_sand(map, (col + 1, row + 1))
+        # part 2, map is filled
+        elif map[row][col] == 'sand':
+            return True
         # place sand
         else:
             map[row][col] = 'sand'
