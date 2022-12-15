@@ -41,7 +41,9 @@ def process_lines(input_lines):
 
     for index in range(len(pairs)):
         pairs[index] = ((pairs[index][0][0], pairs[index][0][1]), 
-                        (pairs[index][1][0], pairs[index][1][1]))
+                        (pairs[index][1][0], pairs[index][1][1]),
+                        manhattan_distance((pairs[index][0][0], pairs[index][0][1]), 
+                                            (pairs[index][1][0], pairs[index][1][1])))
 
     return pairs, max, max_y
 
@@ -60,14 +62,13 @@ def check_sensor(listing, point):
     #    return False
 
     for pair in listing:
-        sensor, beacon = pair
+        sensor, beacon, sensor_detection = pair
         
         sensor_distance = manhattan_distance(point, sensor)
-        sensor_detection = manhattan_distance(sensor, beacon)
         if sensor_distance <= sensor_detection:
-            return True
+            return True, pair
 
-    return False
+    return False, None
 
 
 def count_nos(pairs, max_x, row):
@@ -88,9 +89,18 @@ def part_one(sample_file = True):
 # print(part_one(False))
 
 def check_cols(sensor_list, sensor_max, row):
-    for col in range(sensor_max):
-        if not check_sensor(sensor_list, (col, row)):
+    # print(row)
+    col = 0
+    while col < sensor_max:
+        result, pair = check_sensor(sensor_list, (col, row))
+        if not result:
             return row + col * 4000000
+        else:
+            sensor_distance = pair[2]
+            sensor_col = pair[0][0]
+            sensor_row = pair[0][1]
+            col = sensor_col + sensor_distance - abs(sensor_row - row) + 1
+
 
 def log_result(val):
     if val is not None:
@@ -109,6 +119,7 @@ def part_two(sample_file = True):
     pool = Pool(processes=10)
     for row in range(sensor_max):
         pool.apply_async(check_cols, args=(sensor_beacon, sensor_max, row), callback=log_result)
+        # check_cols(sensor_beacon, sensor_max, row)
     pool.close()
     pool.join()
 
