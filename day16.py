@@ -105,50 +105,49 @@ def part_one(sample_file = True):
 # print(part_one(False))
 
 def search_with_elephant(valves, my_position, my_time_to_next, elephant_position, elephant_time_to_next, time, open_list, distances, good_valves):
-    if len(good_valves) - len(open_list) == 0 or time <= 0:
+    to_check = [valve for valve in good_valves if valve not in open_list]
+
+    if to_check == 0 or time <= 0:
         return 0
     best = 0
 
-    if my_time_to_next == 0 or elephant_time_to_next == 0:
-        to_check = [valve for valve in good_valves if valve not in open_list]
-
-        if elephant_time_to_next == 0 and my_time_to_next == 0:
-            for my_valve in to_check:
-                if my_valve == my_position:
-                    continue
-                for ele_valve in to_check:
-                    if ele_valve == elephant_position or my_valve == ele_valve:
-                        continue
-                    new_open = open_list[:]
-                    valve_score = valves[my_valve].flow_rate * (time - distances[my_position][my_valve] - 1) \
-                                  + valves[ele_valve].flow_rate * (time - distances[elephant_position][ele_valve] - 1)
-                    new_open.append(my_valve)
-                    new_open.append(ele_valve)
-                    best = max(best, valve_score + 
-                                     search_with_elephant(valves, my_valve, distances[my_position][my_valve], ele_valve, distances[elephant_position][ele_valve], time - 1, new_open, distances, good_valves))
-
-        elif my_time_to_next == 0:
-
-            for my_valve in to_check:
-                if my_valve == my_position:
-                    continue
-                new_open = open_list[:]
-                new_open.append(my_valve)
-                valve_score = valves[my_valve].flow_rate * (time - distances[my_position][my_valve] - 1)
-                best = max(best, valve_score + 
-                                  search_with_elephant(valves, my_valve, distances[my_position][my_valve], elephant_position, elephant_time_to_next - 1, time - 1, new_open, distances, good_valves))
-        
-        elif elephant_time_to_next == 0:
-            valve_score = valves[elephant_position].flow_rate * (time - 1)
-
+    if elephant_time_to_next == 0 and my_time_to_next == 0:
+        for my_valve in to_check:
+            if my_valve == my_position:
+                continue
             for ele_valve in to_check:
-                if ele_valve == elephant_position:
+                if ele_valve == elephant_position or my_valve == ele_valve:
                     continue
-                valve_score = valves[ele_valve].flow_rate * (time - distances[elephant_position][ele_valve] - 1)
                 new_open = open_list[:]
+                valve_score = valves[my_valve].flow_rate * (time - distances[my_position][my_valve] - 1) \
+                                + valves[ele_valve].flow_rate * (time - distances[elephant_position][ele_valve] - 1)
+                new_open.append(my_valve)
                 new_open.append(ele_valve)
                 best = max(best, valve_score + 
-                                  search_with_elephant(valves, my_position, my_time_to_next - 1, ele_valve, distances[elephant_position][ele_valve], time - 1, new_open, distances, good_valves))
+                                    search_with_elephant(valves, my_valve, distances[my_position][my_valve], ele_valve, distances[elephant_position][ele_valve], time - 1, new_open, distances, good_valves))
+
+    elif my_time_to_next == 0:
+
+        for my_valve in to_check:
+            if my_valve == my_position:
+                continue
+            new_open = open_list[:]
+            new_open.append(my_valve)
+            valve_score = valves[my_valve].flow_rate * (time - distances[my_position][my_valve] - 1)
+            best = max(best, valve_score + 
+                                search_with_elephant(valves, my_valve, distances[my_position][my_valve], elephant_position, elephant_time_to_next - 1, time - 1, new_open, distances, good_valves))
+    
+    elif elephant_time_to_next == 0:
+        valve_score = valves[elephant_position].flow_rate * (time - 1)
+
+        for ele_valve in to_check:
+            if ele_valve == elephant_position:
+                continue
+            valve_score = valves[ele_valve].flow_rate * (time - distances[elephant_position][ele_valve] - 1)
+            new_open = open_list[:]
+            new_open.append(ele_valve)
+            best = max(best, valve_score + 
+                                search_with_elephant(valves, my_position, my_time_to_next - 1, ele_valve, distances[elephant_position][ele_valve], time - 1, new_open, distances, good_valves))
     else:
         return search_with_elephant(valves, my_position, my_time_to_next - 1, elephant_position, elephant_time_to_next - 1, time - 1, open_list, distances, good_valves)
 
@@ -166,4 +165,4 @@ def part_two(sample_file = True):
     best = search_with_elephant(valves, 'AA', 0, 'AA', 0, 26, [], distances, good_valves)
     return best
 
-print(part_two(False))
+print(part_two())
